@@ -1,11 +1,3 @@
 #!/bin/bash
-
-# List files in the current directory
-ls -al
-
-# List files in the parent directory of the working directory
 ls -al ../
-
-# List files in the /boot directory
 ls -al /boot/
-
