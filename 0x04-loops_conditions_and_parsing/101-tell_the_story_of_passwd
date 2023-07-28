@@ -10,7 +10,7 @@ if [ -e "$passwd_file" ]; then
         USER_ID_INFO=$(echo "$USER_ID_INFO" | cut -d ',' -f 5)
         
         # Output the story based on the extracted information
-        echo "The user $USERNAME is part of the $GID gang, lives in $HOME_, and rides $COMMAND. $UID's place is protected by the passcode $PASSWORD, more info about the user here: $USER_ID_INFO"
+        echo "The user $USERNAME is part of the $GID gang, lives in $HOME_, and rides $COMMAND. $UID_'s place is protected by the passcode $PASSWORD, more info about the user here: $USER_ID_INFO"
     done < "$passwd_file"
 else
     echo "The file $passwd_file does not exist."
