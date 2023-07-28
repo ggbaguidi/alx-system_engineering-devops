@@ -5,12 +5,12 @@ passwd_file="/etc/passwd"
 # Check if the file exists before proceeding
 if [ -e "$passwd_file" ]; then
     # Read the file line by line using a while loop and IFS
-    while IFS=: read -r username code uid gid info home shell; do
+    while IFS=: read -r USERNAME PASSWORD UID_ GID USER_ID_INFO HOME_ COMMAND; do
         # Extract additional user ID info from the 5th field (info field)
-        info=$(echo "$info" | cut -d ',' -f 5)
+        USER_ID_INFO=$(echo "$USER_ID_INFO" | cut -d ',' -f 5)
         
         # Output the story based on the extracted information
-        echo "The user $username is part of the $gid gang, lives in $home, and rides $shell. $uid's place is protected by the passcode $code, more info about the user here: $info"
+        echo "The user $USERNAME is part of the $GID gang, lives in $HOME_, and rides $COMMAND. $UID's place is protected by the passcode $PASSWORD, more info about the user here: $USER_ID_INFO"
     done < "$passwd_file"
 else
     echo "The file $passwd_file does not exist."
