@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+SSH_PRIVATE_KEY=~/.ssh/school
+ssh -i "$SSH_PRIVATE_KEY" ubuntu@8.8.8.8
