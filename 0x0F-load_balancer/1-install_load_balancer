@@ -4,12 +4,18 @@ apt-get -y install --no-install-recommends software-properties-common
 add-apt-repository -y ppa:vbernat/haproxy-2.6
 apt-get -y update
 apt-get -y install haproxy=2.6.\*
-echo "frontend myfrontend
-	mode http
-	bind :80
-	default_backend myservers
-      backend myservers
-         balance roundrobin
-         server 389728-web-01 107.23.95.21
-	 server 389728-web-02 34.204.81.3" >> /etc/haproxy/haproxy.cfg
-service haproxy restart
+echo "ENABLED=1" > /etc/default/haproxy
+
+# Listen to web1 and web2 servers
+echo "
+   listen load_balancer
+   bind *:80
+   mode http
+   balance roundrobin
+   option httpclose
+   option forwardfor
+   server 389728-web-01 107.23.95.21:80 check
+   server 389728-web-02 34.204.81.3:80 check
+" >> /etc/haproxy/haproxy.cfg
+
+service haproxy start
