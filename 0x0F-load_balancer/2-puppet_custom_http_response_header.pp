@@ -45,8 +45,8 @@ exec { '/etc/nginx/sites-available/default Header':
   command => 'sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $hostname;" /etc/nginx/sites-available/default'
 }
 
-exec { 'service nginx start':
+exec { 'service nginx restart':
   path    => ['/usr/bin', '/usr/sbin'],
-  command => 'service nginx start'
+  command => 'service nginx restart'
 }
 
