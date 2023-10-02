@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# A script that configures HAproxy on lb-01 server.
+apt-get -y install --no-install-recommends software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-2.6
+apt-get -y update
+apt-get -y install haproxy=2.6.\*
+echo "frontend myfrontend
+	mode http
+	bind :80
+	default_backend myservers
+      backend myservers
+         balance roundrobin
+         server 389728-web-01 107.23.95.21
+	 server 389728-web-02 34.204.81.3" >> /etc/haproxy/haproxy.cfg
+service haproxy restart
