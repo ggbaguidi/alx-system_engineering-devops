@@ -1,38 +1,52 @@
-# A puppet manifest that installs nginx and custom HTTP header response
+# Install Nginx web server
+# Configure Nginx server
 
-exec { 'apt-update':
-  command  => '/usr/bin/apt-get update',
-  provider => shell,
+# Update the existing packages
+exec { 'sudo apt-get update':
+  path    => ['/usr/bin', '/usr/sbin'],
+  command => 'apt-get update'
 }
 
+# Install nginx
 package { 'nginx':
   ensure   => installed,
-  require  => Exec['apt-update'],
+  provider => apt,
+  require  => Exec['sudo apt-get update']
 }
 
-file_line { 'for redirection directive':
-  ensure   => 'present',
-  path     => '/etc/nginx/sites-available/default',
-  after    => 'listen on 80 default_server;',
-  line     => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
-  require  => Package['nginx'],
+# Install ufw to allow the firewall to accept HTTP request
+package { 'ufw':
+  ensure   => installed,
+  provider => apt,
+  require  => Exec['sudo apt-get update']
 }
 
-file_line { 'custom header line to add into the config file':
-  ensure   => 'present',
-  path     => '/etc/nginx/sites-available/default',
-  after    => 'listen on 80 default_server;',
-  line     => 'add_header X-served-By $hostname;',
-  require  => Package['nginx'],
+# Configure the firewall
+exec { 'sudo ufw allow \'Nginx HTTP\'':
+  path    => ['/usr/bin', '/usr/sbin'],
+  command => 'ufw allow \'Nginx HTTP\'',
+  require => Package['ufw']
 }
 
-file { '/var/www/html/index.nginx-debian.html':
-  ensure   => 'present',
-  content  => 'Hello World!',
-  require  => Package['nginx'],
+# Create the index.html file when querying Nginx at its root /
+file { 'Hello World!':
+  ensure  => present,
+  path    => '/var/www/html/index.html',
+  content => 'Hello World!\n'
 }
 
-exec { 'start nginx':
-  command  => '/usr/bin/sudo service nginx start',
-  provider => shell,
+exec { '/etc/nginx/sites-available/default':
+  path    => ['/usr/bin', '/usr/sbin'],
+  command => 'sed -i "/listen 80 default_server;/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default'
 }
+
+exec { '/etc/nginx/sites-available/default Header':
+  path    => ['/usr/bin', '/usr/sbin'],
+  command => 'sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $hostname;" /etc/nginx/sites-available/default'
+}
+
+exec { 'service nginx start':
+  path    => ['/usr/bin', '/usr/sbin'],
+  command => 'service nginx start'
+}
+
