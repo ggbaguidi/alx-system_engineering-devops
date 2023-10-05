@@ -1,52 +1,27 @@
 # Install Nginx web server
 # Configure Nginx server
+# Installs a Nginx server with custom HTTP header
 
-# Update the existing packages
-exec { 'sudo apt-get update':
-  path    => ['/usr/bin', '/usr/sbin'],
-  command => 'apt-get update'
+exec {'update':
+  provider => shell,
+  command  => 'sudo apt-get -y update',
+  before   => Exec['install Nginx'],
 }
 
-# Install nginx
-package { 'nginx':
-  ensure   => installed,
-  provider => apt,
-  require  => Exec['sudo apt-get update']
+exec {'install Nginx':
+  provider => shell,
+  command  => 'sudo apt-get -y install nginx',
+  before   => Exec['add_header'],
 }
 
-# Install ufw to allow the firewall to accept HTTP request
-package { 'ufw':
-  ensure   => installed,
-  provider => apt,
-  require  => Exec['sudo apt-get update']
+exec { 'add_header':
+  provider    => shell,
+  environment => ["HOST=${hostname}"],
+  command     => 'sudo sed -i "s/include \/etc\/nginx\/sites-enabled\/\*;/include \/etc\/nginx\/sites-enabled\/\*;\n\tadd_header X-Served-By \"$HOST\";/" /etc/nginx/nginx.conf',
+  before      => Exec['restart Nginx'],
 }
 
-# Configure the firewall
-exec { 'sudo ufw allow \'Nginx HTTP\'':
-  path    => ['/usr/bin', '/usr/sbin'],
-  command => 'ufw allow \'Nginx HTTP\'',
-  require => Package['ufw']
+exec { 'restart Nginx':
+  provider => shell,
+  command  => 'sudo service nginx restart',
 }
-
-# Create the index.html file when querying Nginx at its root /
-file { 'Hello World!':
-  ensure  => present,
-  path    => '/var/www/html/index.html',
-  content => 'Hello World!\n'
-}
-
-exec { '/etc/nginx/sites-available/default':
-  path    => ['/usr/bin', '/usr/sbin'],
-  command => 'sed -i "/listen 80 default_server;/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default'
-}
-
-exec { '/etc/nginx/sites-available/default Header':
-  path    => ['/usr/bin', '/usr/sbin'],
-  command => 'sed -i "/listen 80 default_server;/a add_header X-Served-By $hostname;" /etc/nginx/sites-available/default'
-}
-
-exec { 'service nginx restart':
-  path    => ['/usr/bin', '/usr/sbin'],
-  command => 'service nginx restart'
-}
-
