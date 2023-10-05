@@ -10,35 +10,36 @@ sudo cp -a /etc/haproxy/haproxy.cfg{,.orig}
 sudo chmod 666 /etc/haproxy/haproxy.cfg
 
 # Configure HAproxy
-cat << EOF >> /etc/haproxy/haproxy.cfg
+server_config=\
+"
 global
-  log 127.0.0.1 local0
-  log 127.0.0.1 local1 notice
-  chroot /var/lib/haproxy
-  pidfile /var/run/haproxy.pid
-  maxconn 4096
+        log 127.0.0.1 local0
+        log 127.0.0.1 local1 notice
 
 defaults
-  log global
-  mode http
-  option httplog
-  option dontlognull
-  timeout connect 5000ms
-  timeout client 50000ms
-  timeout server 50000ms
+        log global
+        mode http
+        option httplog
+        option dontlognull
+        timeout connect 5000ms
+        timeout client 50000ms
+        timeout server 50000ms
+        stats uri /status
 
-frontend http
-  bind *:80
-  default_backend webservers
+frontend  ggbaguidi-frontend
+        bind *:80
+        mode http
+        default_backend ggbaguidi-backend
 
-backend webservers
-  balance roundrobin
-  server 389728-web-01 107.23.95.21:80 check
-  server 389728-web-02 34.204.81.3:80 check
-EOF
-sudo sed -i 's/^ENABLED=./ENABLED=1/' /etc/default/haproxy
-# Make HAproxy start on boot
-sudo systemctl enable haproxy
+backend ggbaguidi-backend
+  	balance roundrobin
+  	server 389728-web-01 107.23.95.21:80 check
+  	server 389728-web-02 34.204.81.3:80 check
+"
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
-# Start HAproxy
-sudo systemctl start haproxy
+# enable haproxy to be started by init script
+
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+service haproxy restart
+
