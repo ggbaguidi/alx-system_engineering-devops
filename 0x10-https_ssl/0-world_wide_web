@@ -3,9 +3,9 @@
 # Display information about subdomains.
 
 show_subdomain() {
-    line=$(dig $1 | awk 'c&&!--c;/ANSWER SECTION:/{c=1}')
+    line=$(dig "$1" | awk 'c&&!--c;/ANSWER SECTION:/{c=1}')
     read -r SUB_DOMAIN RECORD_TYPE DESTINATION <<< "$(echo "$line" | awk '{print $1, $4, $5}')"
-    SUB_DOMAIN=${SUB_DOMAIN%%.*}  # Extract the first part of the subdomain
+    SUB_DOMAIN=$(echo "$SUB_DOMAIN" | awk 'BEGIN {FS="."} {print $1} END{}')
     echo "The subdomain $SUB_DOMAIN is a $RECORD_TYPE record and points to $DESTINATION"
 }
 
