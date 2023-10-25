@@ -56,11 +56,11 @@ if __name__ == "__main__":
             for task in todos:
                 if task.get("completed"):
                     NUMBER_OF_DONE_TASKS += 1
-                    completed_tasks_title.append("\t" + task.get("title").strip())
+                    completed_tasks_title.append(task.get("title").strip())
             TOTAL_NUMBER_OF_TASKS = len(todos)
             print(f"Employee {EMPLOYEE_NAME} is done with", end=" ")
             print(f"tasks({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):")
-            print("\n".join(completed_tasks_title))
-
+            for task in completed_tasks_title:
+                print("\t" + task)
         except ValueError:
             pass
