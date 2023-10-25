@@ -61,6 +61,6 @@ if __name__ == "__main__":
             print(f"Employee {EMPLOYEE_NAME} is done with", end=" ")
             print(f"tasks({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):")
             for task in completed_tasks_title:
-                print("\t" + task)
+                print("\t " + task)
         except ValueError:
             pass
