@@ -18,9 +18,9 @@ returns information about his/her TODO list progress.
         Second and N next lines display the title of completed tasks:
         TASK_TITLE (with 1 tabulation and 1 space before the TASK_TITLE)
 """
+from json import loads
 import sys
 import urllib.request
-from json import loads
 
 URL = "https://jsonplaceholder.typicode.com/"
 
