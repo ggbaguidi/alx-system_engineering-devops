@@ -26,6 +26,7 @@ URL = "https://jsonplaceholder.typicode.com/"
 
 
 if __name__ == "__main__":
+
     def get_request(ressource, param=None):
         """
         Make request
@@ -49,13 +50,13 @@ if __name__ == "__main__":
             userId = int(args[1])
             user = get_request("users", ("id", userId))
             todos = get_request("todos", ("userId", userId))
-            EMPLOYEE_NAME = user[0].get("name")
+            EMPLOYEE_NAME = user[0].get("name").strip()
             NUMBER_OF_DONE_TASKS = 0
             completed_tasks_title = []
             for task in todos:
                 if task.get("completed"):
                     NUMBER_OF_DONE_TASKS += 1
-                    completed_tasks_title.append("\t" + task.get("title"))
+                    completed_tasks_title.append("\t" + task.get("title").strip())
             TOTAL_NUMBER_OF_TASKS = len(todos)
             print(f"Employee {EMPLOYEE_NAME} is done with", end=" ")
             print(f"tasks({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):")
