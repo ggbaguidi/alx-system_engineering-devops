@@ -26,7 +26,14 @@ URL = "https://jsonplaceholder.typicode.com/"
 
 if __name__ == "__main__":
     def get_request(ressource, param=None):
-        """Make request"""
+        """
+        Make request
+        Attrs:
+            ressource (str): a ressource
+            param (tuple): matching param
+        Return:
+            response: dict
+        """
         if param:
             _route = URL + ressource + "/?" + f"{param[0]}={param[1]}"
             request = urllib.request.Request(_route, method="GET")
