@@ -61,7 +61,9 @@ if __name__ == "__main__":
             with open(
                 f"{USER_ID}.csv", mode="w", newline="", encoding="utf-8"
             ) as csvfile:
-                csvwriter = csv.writer(csvfile)
+                csvwriter = csv.writer(
+                    csvfile, quotechar='"', quoting=csv.QUOTE_ALL
+                )
                 csvwriter.writerows(data)
 
         except ValueError:
