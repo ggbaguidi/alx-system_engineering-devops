@@ -46,7 +46,7 @@ if __name__ == "__main__":
             todos = get_request("todos", ("userId", userId))
             data = []
             USER_ID = userId
-            USERNAME = user[0].get("name")
+            USERNAME = user[0].get("username")
             for task in todos:
                 TASK_COMPLETED_STATUS = task.get("completed")
                 TASK_TITLE = task.get("title")
