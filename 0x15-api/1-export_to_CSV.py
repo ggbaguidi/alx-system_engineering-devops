@@ -49,12 +49,12 @@ if __name__ == "__main__":
             USERNAME = user[0].get("name")
             for task in todos:
                 TASK_COMPLETED_STATUS = task.get("completed")
-                TASK_TITLE = task.get("title").strip()
+                TASK_TITLE = task.get("title")
                 row = [
-                    str(USER_ID),
-                    str(USERNAME),
-                    str(TASK_COMPLETED_STATUS),
-                    str(TASK_TITLE),
+                    USER_ID,
+                    USERNAME,
+                    TASK_COMPLETED_STATUS,
+                    TASK_TITLE,
                 ]
                 data.append(row)
 
