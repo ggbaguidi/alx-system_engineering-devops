@@ -33,8 +33,8 @@ frontend  ggbaguidi-frontend
 
 backend ggbaguidi-backend
   	balance roundrobin
-  	server 389728-web-01 107.23.95.21:80 check
-  	server 389728-web-02 34.204.81.3:80 check
+  	server 389728-web-01 52.3.255.199:80 check
+  	server 389728-web-02 54.144.154.232:80 check
 "
 echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
